@@ -1,0 +1,48 @@
+```{R}
+install.packages("ggplot2")
+install.packages("moments")
+install.packages("dplyr")
+install.packages("data.table")
+```
+
+```{R}
+uninstall.packages("ggplot2")
+```
+
+```{R}
+knitr::opts_chunk$set(warning = FALSE, message = FALSE, echo = TRUE)
+library(ggplot2)
+library(moments)
+library(dplyr)
+library(data.table)
+set.seed(15)
+```
+
+```{R}
+df2_data <- data.frame(
+    x = seq(0, 80, 0.1),
+    y = dchisq(seq(0, 80, 0.1), df = 2)
+)
+df40_data <- data.frame(
+    x = seq(0, 80, 0.1),
+    y = dchisq(seq(0, 80, 0.1), df = 40)
+)
+
+ggplot(xlim = c(0, 80)) +
+    geom_line(
+        data = df2_data,
+        aes(x = x, y = y, color = "2"),
+    ) +
+    geom_line(
+        data = df40_data,
+        aes(x = x, y = y, color = "40"),
+    ) +
+    labs(
+        title = "Rozkłady Chi-kwadrat",
+    ) +
+    scale_color_manual(
+        name = "Ilość st. swobody",
+        values = c("2" = "blue", "40" = "red")
+    ) +
+    theme_classic()
+```
