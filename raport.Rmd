@@ -1,9 +1,27 @@
+---
+title: "Projekt Zaliczeniowy"
+author: "Piotr Rzadkowski, Jan Masternak"
+date: "20.01.2023"
+output: html_document
+---
+
 ```{R}
-# install.packages("ecr")
-# install.packages("smoof")
-# install.packages("ggplot2")
+if (!requireNamespace("ecr", quietly = TRUE)) {
+    install.packages("ecr")
+}
+if (!requireNamespace("smoof", quietly = TRUE)) {
+    install.packages("smoof")
+}
+if (!requireNamespace("ggplot2", quietly = TRUE)) {
+    install.packages("ggplot2")
+}
 ```
 
+```{R setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{R}
 ```{R}
 library(ecr)
 library(ggplot2)
@@ -75,11 +93,7 @@ test_runner <- function(f, size, starting_points_n, range) {
     ms <- res[[1]] # minima found by MS
     calls <- res[[2]] # mean of calls
     prs <- prs_rep(f, size, calls, range) # mean of minima with same number of calls as MS
-    ms_hist <- function() hist(ms, main = "Histogram of minima found by MS", xlab = "Minima found by MS")
-    prs_hist <- function() hist(prs, main = "Histogram of minima found by PRS", xlab = "Minima found by PRS")
-    ms_prs_boxplot <- function() boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS", ylab = "Minima found by MS and PRS")
-    return(c(ms = list(ms), prs = list(prs), ms_min = mean(ms), prs_min = mean(prs), ms_hist = ms_hist, prs_hist = prs_hist, ms_prs_boxplot = ms_prs_boxplot))
-    return(c(ms_min = mean(ms), prs_min = mean(prs), ms_hist = ms_hist, prs_hist = prs_hist, ms_prs_boxplot = ms_prs_boxplot))
+    return(c(ms = list(ms), prs = list(prs), ms_min = mean(ms), prs_min = mean(prs)))
 }
 ```
 
@@ -98,18 +112,19 @@ result$ms_min
 result$prs_min
 ms <- result$ms
 prs <- result$prs
-hist(ms, main = "Histogram of minima found by MS for Ackley in 2 dimensions", xlab = "Minima found by MS")
-hist(prs, main = "Histogram of minima found by PRS for Ackley in 2 dimensions", xlab = "Minima found by PRS")
-boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Ackley in 2 dimensions", ylab = "Minima found by MS and PRS")
+hist(ms, main = "Histogram minimów znalezionych przez MS dla funkcji Ackley w 2 wymiarach", xlab = "Minima znalezione przez MS")
+hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Ackley w 2 wymiarach", xlab = "Minima znalezione przez PRS")
+boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Ackley w 2 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
+
 ```{R}
+# Przedziały ufności
+
+ifelse(t.test(ms)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
+
+ifelse(t.test(prs)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
+
 t.test(ms, prs, mu = 0)
-
-#Przedziały ufności 
-
-ifelse(t.test(ms)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
-
-ifelse(t.test(prs)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
 ```
 
 ```{R}
@@ -120,19 +135,19 @@ result$ms_min
 result$prs_min
 ms <- result$ms
 prs <- result$prs
-hist(ms, main = "Histogram of minima found by MS for Ackley in 10 dimensions", xlab = "Minima found by MS")
-hist(prs, main = "Histogram of minima found by PRS for Ackley in 10 dimensions", xlab = "Minima found by PRS")
-boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Ackley in 10 dimensions", ylab = "Minima found by MS and PRS")
+hist(ms, main = "Histogram minimów znalezionych przez MS dla funkcji Ackley w 10 wymiarach", xlab = "Minima znalezione przez MS")
+hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Ackley w 10 wymiarach", xlab = "Minima znalezione przez PRS")
+boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Ackley w 10 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
 ```{R}
+# Przedziały ufności
+
+ifelse(t.test(ms)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
+
+ifelse(t.test(prs)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
+
 t.test(ms, prs, mu = 0)
-
-#Przedziały ufności 
-
-ifelse(t.test(ms)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
-
-ifelse(t.test(prs)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
 ```
 
 ```{R}
@@ -143,20 +158,19 @@ result$ms_min
 result$prs_min
 ms <- result$ms
 prs <- result$prs
-hist(ms, main = "Histogram of minima found by MS for Ackley in 20 dimensions", xlab = "Minima found by MS")
-hist(prs, main = "Histogram of minima found by PRS for Ackley in 20 dimensions", xlab = "Minima found by PRS")
-boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Ackley in 20 dimensions", ylab = "Minima found by MS and PRS")
-t.test(ms, prs, mu = 0)
+hist(ms, main = "Histogram minimów znalezionych przez MS dla funkcji Ackley w 20 wymiarach", xlab = "Minima znalezione przez MS")
+hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Ackley w 20 wymiarach", xlab = "Minima znalezione przez PRS")
+boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Ackley w 20 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
 ```{R}
+# Przedziały ufności
+
+ifelse(t.test(ms)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
+
+ifelse(t.test(prs)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
+
 t.test(ms, prs, mu = 0)
-
-#Przedziały ufności 
-
-ifelse(t.test(ms)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
-
-ifelse(t.test(prs)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
 ```
 
 ```{R}
@@ -167,20 +181,19 @@ result$ms_min
 result$prs_min
 ms <- result$ms
 prs <- result$prs
-hist(ms, main = "Histogram of minima found by MS for Rosenbrock in 2 dimensions", xlab = "Minima found by MS")
-hist(prs, main = "Histogram of minima found by PRS for Rosenbrock in 2 dimensions", xlab = "Minima found by PRS")
-boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Rosenbrock in 2 dimensions", ylab = "Minima found by MS and PRS")
-t.test(ms, prs, mu = 0)
+hist(ms, main = "Histogram minimów znalezionych przez MS dla funkcji Rosenbrock w 2 wymiarach", xlab = "Minima znalezione przez MS")
+hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Rosenbrock w 2 wymiarach", xlab = "Minima znalezione przez PRS")
+boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Rosenbrock w 2 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
 ```{R}
+# Przedziały ufności
+
+ifelse(t.test(ms)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
+
+ifelse(t.test(prs)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
+
 t.test(ms, prs, mu = 0)
-
-#Przedziały ufności 
-
-ifelse(t.test(ms)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
-
-ifelse(t.test(prs)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
 ```
 
 ```{R}
@@ -191,20 +204,19 @@ result$ms_min
 result$prs_min
 ms <- result$ms
 prs <- result$prs
-hist(ms, main = "Histogram of minima found by MS for Rosenbrock in 10 dimensions", xlab = "Minima found by MS")
-hist(prs, main = "Histogram of minima found by PRS for Rosenbrock in 10 dimensions", xlab = "Minima found by PRS")
-boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Rosenbrock in 10 dimensions", ylab = "Minima found by MS and PRS")
-t.test(ms, prs, mu = 0)
+hist(ms, main = "Histogram minimów znalezionych przez MS dla funkcji Rosenbrock w 10 wymiarach", xlab = "Minima znalezione przez MS")
+hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Rosenbrock w 10 wymiarach", xlab = "Minima znalezione przez PRS")
+boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Rosenbrock w 10 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
 ```{R}
+# Przedziały ufności
+
+ifelse(t.test(ms)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
+
+ifelse(t.test(prs)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
+
 t.test(ms, prs, mu = 0)
-
-#Przedziały ufności 
-
-ifelse(t.test(ms)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
-
-ifelse(t.test(prs)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
 ```
 
 ```{R}
@@ -215,17 +227,17 @@ result$ms_min
 result$prs_min
 ms <- result$ms
 prs <- result$prs
-hist(ms, main = "Histogram of minima found by MS for Rosenbrock in 20 dimensions", xlab = "Minima found by MS")
-hist(prs, main = "Histogram of minima found by PRS for Rosenbrock in 20 dimensions", xlab = "Minima found by PRS")
-boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Rosenbrock in 20 dimensions", ylab = "Minima found by MS and PRS")
-t.test(ms, prs, mu = 0)
+hist(ms, main = "Histogram minimów znalezionych przez MS dla funkcji Rosenbrock w 20 wymiarach", xlab = "Minima znalezione przez MS")
+hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Rosenbrock w 20 wymiarach", xlab = "Minima znalezione przez PRS")
+boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Rosenbrock w 20 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
-
 ```{R}
-#Przedziały ufności 
+# Przedziały ufności
 
-ifelse(t.test(ms)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
+ifelse(t.test(ms)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
 
-ifelse(t.test(prs)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
+ifelse(t.test(prs)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
+
+t.test(ms, prs, mu = 0)
 ```
