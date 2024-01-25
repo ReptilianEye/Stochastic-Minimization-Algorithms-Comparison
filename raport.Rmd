@@ -1,4 +1,10 @@
 ```{R}
+# install.packages("ecr")
+# install.packages("smoof")
+# install.packages("ggplot2")
+```
+
+```{R}
 library(ecr)
 library(ggplot2)
 library(smoof)
@@ -33,7 +39,7 @@ prs_rep <- function(f, size, n, range) {
     return(y)
 }
 ```
-    
+
 ```{R}
 find_min_ms <- function(f, n, range) {
     R <- getParamLengths(getParamSet(f))
@@ -72,18 +78,14 @@ test_runner <- function(f, size, starting_points_n, range) {
     ms_hist <- function() hist(ms, main = "Histogram of minima found by MS", xlab = "Minima found by MS")
     prs_hist <- function() hist(prs, main = "Histogram of minima found by PRS", xlab = "Minima found by PRS")
     ms_prs_boxplot <- function() boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS", ylab = "Minima found by MS and PRS")
-    return(c(ms_min = mean(ms), prs_min = mean(prs), ms_hist = ms_hist, prs_hist = prs_hist, ms_prs_boxplot = ms_prs_boxplot))
+    return(c(ms = list(ms), prs = list(prs), ms_min = mean(ms), prs_min = mean(prs), ms_hist = ms_hist, prs_hist = prs_hist, ms_prs_boxplot = ms_prs_boxplot))
+    # return(c(ms_min = mean(ms), prs_min = mean(prs), ms_hist = ms_hist, prs_hist = prs_hist, ms_prs_boxplot = ms_prs_boxplot))
 }
 ```
 
-Test_runner zwraca następujące wartości:
-* ms_min - średnia z minima znalezionych przez MS
-* prs_min - średnia z minima znalezionych przez PRS
-* ms_hist - histogram minima znalezionych przez MS (zapisany jako funkcja)
-* prs_hist - histogram minima znalezionych przez PRS (zapisany jako funkcja)
-* ms_prs_boxplot - boxplot minima znalezionych przez MS i PRS (zapisany jako funkcja)
+Test_runner zwraca następujące wartości: \* ms_min - średnia z minima znalezionych przez MS \* prs_min - średnia z minima znalezionych przez PRS \* ms_hist - histogram minima znalezionych przez MS (zapisany jako funkcja) \* prs_hist - histogram minima znalezionych przez PRS (zapisany jako funkcja) \* ms_prs_boxplot - boxplot minima znalezionych przez MS i PRS (zapisany jako funkcja)
 
-``` {R}
+```{R}
 n <- 100 # number of starting points
 size <- 50 # number of repetitions
 ```
@@ -94,9 +96,12 @@ range <- ackley_range # range of starting points
 result <- test_runner(f, size, n, range)
 result$ms_min
 result$prs_min
-result$ms_hist()
-result$prs_hist()
-result$ms_prs_boxplot()
+ms <- result$ms
+prs <- result$prs
+hist(ms, main = "Histogram of minima found by MS for Ackley in 2 dimensions", xlab = "Minima found by MS")
+hist(prs, main = "Histogram of minima found by PRS for Ackley in 2 dimensions", xlab = "Minima found by PRS")
+boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Ackley in 2 dimensions", ylab = "Minima found by MS and PRS")
+t.test(ms, prs, mu = 0)
 ```
 
 ```{R}
@@ -105,9 +110,12 @@ range <- ackley_range # range of starting points
 result <- test_runner(f, size, n, range)
 result$ms_min
 result$prs_min
-result$ms_hist()
-result$prs_hist()
-result$ms_prs_boxplot()
+ms <- result$ms
+prs <- result$prs
+hist(ms, main = "Histogram of minima found by MS for Ackley in 10 dimensions", xlab = "Minima found by MS")
+hist(prs, main = "Histogram of minima found by PRS for Ackley in 10 dimensions", xlab = "Minima found by PRS")
+boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Ackley in 10 dimensions", ylab = "Minima found by MS and PRS")
+t.test(ms, prs, mu = 0)
 ```
 
 
@@ -117,9 +125,12 @@ range <- ackley_range # range of starting points
 result <- test_runner(f, size, n, range)
 result$ms_min
 result$prs_min
-result$ms_hist()
-result$prs_hist()
-result$ms_prs_boxplot()
+ms <- result$ms
+prs <- result$prs
+hist(ms, main = "Histogram of minima found by MS for Ackley in 20 dimensions", xlab = "Minima found by MS")
+hist(prs, main = "Histogram of minima found by PRS for Ackley in 20 dimensions", xlab = "Minima found by PRS")
+boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Ackley in 20 dimensions", ylab = "Minima found by MS and PRS")
+t.test(ms, prs, mu = 0)
 ```
 
 ```{R}
@@ -128,10 +139,14 @@ range <- rosenbrock_range # range of starting points
 result <- test_runner(f, size, n, range)
 result$ms_min
 result$prs_min
-result$ms_hist()
-result$prs_hist()
-result$ms_prs_boxplot()
+ms <- result$ms
+prs <- result$prs
+hist(ms, main = "Histogram of minima found by MS for Rosenbrock in 2 dimensions", xlab = "Minima found by MS")
+hist(prs, main = "Histogram of minima found by PRS for Rosenbrock in 2 dimensions", xlab = "Minima found by PRS")
+boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Rosenbrock in 2 dimensions", ylab = "Minima found by MS and PRS")
+t.test(ms, prs, mu = 0)
 ```
+
 
 ```{R}
 f <- rosenbrock_R10
@@ -139,9 +154,12 @@ range <- rosenbrock_range # range of starting points
 result <- test_runner(f, size, n, range)
 result$ms_min
 result$prs_min
-result$ms_hist()
-result$prs_hist()
-result$ms_prs_boxplot()
+ms <- result$ms
+prs <- result$prs
+hist(ms, main = "Histogram of minima found by MS for Rosenbrock in 10 dimensions", xlab = "Minima found by MS")
+hist(prs, main = "Histogram of minima found by PRS for Rosenbrock in 10 dimensions", xlab = "Minima found by PRS")
+boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Rosenbrock in 10 dimensions", ylab = "Minima found by MS and PRS")
+t.test(ms, prs, mu = 0)
 ```
 
 ```{R}
@@ -150,11 +168,10 @@ range <- rosenbrock_range # range of starting points
 result <- test_runner(f, size, n, range)
 result$ms_min
 result$prs_min
-result$ms_hist()
-result$prs_hist()
-result$ms_prs_boxplot()
+ms <- result$ms
+prs <- result$prs
+hist(ms, main = "Histogram of minima found by MS for Rosenbrock in 20 dimensions", xlab = "Minima found by MS")
+hist(prs, main = "Histogram of minima found by PRS for Rosenbrock in 20 dimensions", xlab = "Minima found by PRS")
+boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Rosenbrock in 20 dimensions", ylab = "Minima found by MS and PRS")
+t.test(ms, prs, mu = 0)
 ```
-
-
-
-

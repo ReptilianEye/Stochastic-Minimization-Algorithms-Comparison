@@ -57,14 +57,14 @@ test_runner <- function(f, size, starting_points_n, range) {
     ms <- res[[1]] # minima found by MS
     calls <- res[[2]] # mean of calls
     prs <- prs_rep(f, size, calls, range) # mean of minima with same number of calls as MS
-    ms_hist <- function() hist(ms, main = "Histogram of minima found by MS", xlab = "Minima found by MS")
-    prs_hist <- function() hist(prs, main = "Histogram of minima found by PRS", xlab = "Minima found by PRS")
-    ms_prs_boxplot <- function() boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS", ylab = "Minima found by MS and PRS")
-    return(c(ms_min = mean(ms), prs_min = mean(prs), ms_hist = ms_hist, prs_hist = prs_hist, ms_prs_boxplot = ms_prs_boxplot))
+    return(c(ms = list(ms), prs = list(prs), ms_min = mean(ms), prs_min = mean(prs)))
 }
 
-f <- ackley_R2
-n <- 10 # number of starting points
-size <- 5 # number of repetitions
+f <- ackley_R20
+n <- 100 # number of starting points
+size <- 50 # number of repetitions
 range <- ackley_range # range of starting points
 res <- test_runner(f, size, n, range)
+ms <- res$ms
+prs <- res$prs
+t.test(ms, prs, mu = 0)
