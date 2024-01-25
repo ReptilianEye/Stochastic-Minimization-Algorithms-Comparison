@@ -26,14 +26,6 @@ prs_mean <- function(f, size, n, range) {
     return(mean(y))
 }
 
-
-f <- ackley_R2 # function to evaluate
-size <- 50 # number of samples
-n <- 1000 # number of iterations
-range <- ackley_range # range of values for parameters
-prs_mean(f, size, n, range)
-
-
 find_min_ms <- function(f, n, range) {
     R <- getParamLengths(getParamSet(f))
     points <- matrix(0, nrow = n, ncol = R)
@@ -62,11 +54,13 @@ ms_mean <- function(f, size, n, range) {
     calls <- result[, 2]
     return(c(mean(y), mean(calls)))
 }
+
+
 f <- ackley_R2
-n <- 100
-size <- 50
-range <- ackley_range
-res <- ms_mean(f, size, n, range)
-min_v <- res[1]
-calls <- res[2]
-prs_mean(ackley_R2, 50, calls, ackley_range)
+n <- 100 # number of starting points
+size <- 50 # number of repetitions
+range <- ackley_range # range of starting points
+res <- ms_mean(f, size, n, range) # mean of minima and mean of calls
+min_v <- res[1] # mean of minima
+calls <- res[2] # mean of calls
+prs_mean(f, size, calls, range) # mean of minima with same number of calls as MS
