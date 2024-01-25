@@ -59,7 +59,7 @@ ms_mean <- function(f, size, n, range) {
     }
     y <- result[, 1]
     calls <- result[, 2]
-    return(c(y = mean(y), calls = mean(calls)))
+    return(c(mean(y), mean(calls)))
 }
 ```
 

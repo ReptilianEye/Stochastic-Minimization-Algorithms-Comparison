@@ -40,7 +40,6 @@ find_min_ms <- function(f, n, range) {
         result <- optim(points[i, ], f, lower = lower, upper = upper, method = "L-BFGS-B")
         min_v <- min(min_v, result$value)
         calls <- calls + result$counts[1]
-        # min_v <- min(min_v, optim(points[i, ], f)$value, lower = lower, upper = upper, method = "L-BFGS-B")
     }
     return(c(min_v, calls))
 }
@@ -49,10 +48,9 @@ ms_mean <- function(f, size, n, range) {
     for (i in 1:size) {
         result[i, ] <- find_min_ms(f, n, range)
     }
-    # y <- replicate(size, matrix(find_min_ms(f, n, range)))
     y <- result[, 1]
     calls <- result[, 2]
-    return(c(y = mean(y), calls = mean(calls)))
+    return(c(mean(y), mean(calls)))
 }
 test_runner <- function(f, size, starting_points_n, range) {
     res <- ms_mean(f, size, starting_points_n, range)
