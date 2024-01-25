@@ -52,15 +52,18 @@ ms_mean <- function(f, size, n, range) {
     # y <- replicate(size, matrix(find_min_ms(f, n, range)))
     y <- result[, 1]
     calls <- result[, 2]
-    return(c(mean(y), mean(calls)))
+    return(c(y = mean(y), calls = mean(calls)))
 }
-
+test_runner <- function(f, size, starting_points_n, range) {
+    res <- ms_mean(f, size, starting_points_n, range)
+    ms <- res[1] # mean of minima found by MS
+    calls <- res[2] # mean of calls
+    prs <- prs_mean(f, size, calls, range) # mean of minima with same number of calls as MS
+    return(c(ms_min = ms, prs_min = prs))
+}
 
 f <- ackley_R2
 n <- 100 # number of starting points
 size <- 50 # number of repetitions
 range <- ackley_range # range of starting points
-res <- ms_mean(f, size, n, range) # mean of minima and mean of calls
-min_v <- res[1] # mean of minima
-calls <- res[2] # mean of calls
-prs_mean(f, size, calls, range) # mean of minima with same number of calls as MS
+test_runner(f, size, n, range)

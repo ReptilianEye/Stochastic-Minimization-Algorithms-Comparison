@@ -38,18 +38,82 @@ prs_mean <- function(f, size, n, range) {
 find_min_ms <- function(f, n, range) {
     R <- getParamLengths(getParamSet(f))
     points <- matrix(0, nrow = n, ncol = R)
-    for (i in 1:R) {
-        points[, i] <- runif(n, range[1], range[2])
+    for (i in 1:n) {
+        points[i, ] <- runif(R, range[1], range[2])
     }
     min_v <- Inf
+    lower <- replicate(R, range[1])
+    upper <- replicate(R, range[2])
+    calls <- 0
     for (i in 1:n) {
-        min_v <- min(min_v, optim(points[i, ], f)$value)
+        result <- optim(points[i, ], f, lower = lower, upper = upper, method = "L-BFGS-B")
+        min_v <- min(min_v, result$value)
+        calls <- calls + result$counts[1]
     }
-    return(min_v)
+    return(c(min_v, calls))
 }
 ms_mean <- function(f, size, n, range) {
-    y <- replicate(size, find_min_ms(f, n, range))
-    return(mean(y))
+    result <- matrix(0, nrow = size, ncol = 2)
+    for (i in 1:size) {
+        result[i, ] <- find_min_ms(f, n, range)
+    }
+    y <- result[, 1]
+    calls <- result[, 2]
+    return(c(y = mean(y), calls = mean(calls)))
 }
 ```
-    
+
+```{R}
+test_runner <- function(f, size, starting_points_n, range) {
+    res <- ms_mean(f, size, starting_points_n, range)
+    ms <- res[1] # mean of minima found by MS
+    calls <- res[2] # mean of calls
+    prs <- prs_mean(f, size, calls, range) # mean of minima with same number of calls as MS
+    return(c(ms_min = ms, prs_min = prs))
+}
+```
+
+``` {R}
+n <- 100 # number of starting points
+size <- 50 # number of repetitions
+```
+
+
+```{R}
+f <- ackley_R2
+range <- ackley_range # range of starting points
+test_runner(f, size, n, range)
+```
+```{R}
+f <- ackley_R10
+range <- ackley_range # range of starting points
+test_runner(f, size, n, range)
+```
+
+```{R}
+f <- ackley_R20
+range <- ackley_range # range of starting points
+test_runner(f, size, n, range)
+```
+
+```{R}
+f <- rosenbrock_R2
+range <- rosenbrock_range # range of starting points
+test_runner(f, size, n, range)
+```
+
+```{R}
+f <- rosenbrock_R10
+range <- rosenbrock_range # range of starting points
+test_runner(f, size, n, range)
+```
+
+```{R}
+f <- rosenbrock_R20
+range <- rosenbrock_range # range of starting points
+test_runner(f, size, n, range)
+```
+
+
+
+
