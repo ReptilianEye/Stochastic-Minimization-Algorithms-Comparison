@@ -1,39 +1,58 @@
-my_min <- function(a, b) {
-    if (all(a < b)) {
-        return(a)
-    } else {
-        return(b)
-    }
-}
+library(ecr)
+library(ggplot2)
+library(smoof)
 
-prs_unit <- function(n, ranges) {
-    dis <- list()
-    for (i in seq_along(ranges)) {
-        dis[[i]] <- runif(n, ranges[[i]][[1]], ranges[[i]][[2]])
-    }
+ackley_range <- c(-32.768, 32.768)
+ackley_R2 <- makeAckleyFunction(2L)
+ackley_R10 <- makeAckleyFunction(10L)
+ackley_R20 <- makeAckleyFunction(20L)
+
+rosenbrock_range <- c(-5, 10)
+rosenbrock_R2 <- makeRosenbrockFunction(2L)
+rosenbrock_R10 <- makeRosenbrockFunction(10L)
+rosenbrock_R20 <- makeRosenbrockFunction(20L)
+
+find_min_prs <- function(f, n, range) {
+    R <- getParamLengths(getParamSet(f))
     min_v <- Inf
     for (i in 1:n) {
-        v <- c()
-        for (j in seq_along(ranges)) {
-            v <- c(v, dis[[j]][i])
-        }
-        min_v <- my_min(min_v, v)
+        v <- c(runif(R, range[1], range[2]))
+        # min_v <- min(min_v, do.call(f, c(as.list(v))))
+        min_v <- min(min_v, f(v))
     }
     return(min_v)
 }
-prs_mean <- function(size, n, ranges) {
-    y <- replicate(size, list(prs_unit(n, ranges)))
-    mean_y <- rep(0, length(ranges))
-    for (vector in y) {
-        for (i in seq_along(vector)) {
-            mean_y[i] <- mean_y[i] + vector[i]
-        }
-    }
-    print(y)
-    for (i in seq_along(mean_y)) mean_y[i] <- mean_y[i] / length(y)
-    return(mean_y)
+prs_mean <- function(f, size, n, range) {
+    y <- replicate(size, find_min_prs(f, n, range))
+    return(mean(y))
 }
-size <- 2
-n <- 100
-ranges <- list(list(0, 1), list(-2, 2), list(100, 1000))
-prs_mean(size, n, ranges)
+
+
+f <- ackley_R2 # function to evaluate
+size <- 20 # number of samples
+n <- 1000 # number of iterations
+range <- ackley_range # range of values for parameters
+prs_mean(f, size, n, range)
+
+
+find_min_ms <- function(f, n, range) {
+    R <- getParamLengths(getParamSet(f))
+    points <- matrix(0, nrow = n, ncol = R)
+    for (i in 1:R) {
+        points[, i] <- runif(n, range[1], range[2])
+    }
+    min_v <- Inf
+    for (i in 1:n) {
+        min_v <- min(min_v, optim(points[i, ], f)$value)
+    }
+    return(min_v)
+}
+ms_mean <- function(f, size, n, range) {
+    y <- replicate(size, find_min_ms(f, n, range))
+    return(mean(y))
+}
+f <- ackley_R2
+n <- 10
+size <- 20
+range <- ackley_range
+ms_mean(f, size, n, range)
