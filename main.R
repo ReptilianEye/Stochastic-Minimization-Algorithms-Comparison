@@ -21,9 +21,9 @@ find_min_prs <- function(f, n, range) {
     }
     return(min_v)
 }
-prs_mean <- function(f, size, n, range) {
+prs_rep <- function(f, size, n, range) {
     y <- replicate(size, find_min_prs(f, n, range))
-    return(mean(y))
+    return(y)
 }
 
 find_min_ms <- function(f, n, range) {
@@ -43,25 +43,28 @@ find_min_ms <- function(f, n, range) {
     }
     return(c(min_v, calls))
 }
-ms_mean <- function(f, size, n, range) {
+ms_rep <- function(f, size, n, range) {
     result <- matrix(0, nrow = size, ncol = 2)
     for (i in 1:size) {
         result[i, ] <- find_min_ms(f, n, range)
     }
     y <- result[, 1]
     calls <- result[, 2]
-    return(c(mean(y), mean(calls)))
+    return(list(y, mean(calls)))
 }
 test_runner <- function(f, size, starting_points_n, range) {
-    res <- ms_mean(f, size, starting_points_n, range)
-    ms <- res[1] # mean of minima found by MS
-    calls <- res[2] # mean of calls
-    prs <- prs_mean(f, size, calls, range) # mean of minima with same number of calls as MS
-    return(c(ms_min = ms, prs_min = prs))
+    res <- ms_rep(f, size, starting_points_n, range)
+    ms <- res[[1]] # minima found by MS
+    calls <- res[[2]] # mean of calls
+    prs <- prs_rep(f, size, calls, range) # mean of minima with same number of calls as MS
+    ms_hist <- function() hist(ms, main = "Histogram of minima found by MS", xlab = "Minima found by MS")
+    prs_hist <- function() hist(prs, main = "Histogram of minima found by PRS", xlab = "Minima found by PRS")
+    ms_prs_boxplot <- function() boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS", ylab = "Minima found by MS and PRS")
+    return(c(ms_min = mean(ms), prs_min = mean(prs), ms_hist = ms_hist, prs_hist = prs_hist, ms_prs_boxplot = ms_prs_boxplot))
 }
 
 f <- ackley_R2
-n <- 100 # number of starting points
-size <- 50 # number of repetitions
+n <- 10 # number of starting points
+size <- 5 # number of repetitions
 range <- ackley_range # range of starting points
-test_runner(f, size, n, range)
+res <- test_runner(f, size, n, range)
