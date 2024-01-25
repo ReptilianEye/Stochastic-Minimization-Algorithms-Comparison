@@ -1,3 +1,10 @@
+---
+title: "Projekt Zaliczeniowy"
+author: "Piotr Rzadkowski, Jan Masternak"
+date: "20.01.2023"
+output: html_document
+---
+
 ```{R}
 if (!requireNamespace("ecr", quietly = TRUE)) {
     install.packages("ecr")
@@ -10,6 +17,11 @@ if (!requireNamespace("ggplot2", quietly = TRUE)) {
 }
 ```
 
+```{R setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{R}
 ```{R}
 library(ecr)
 library(ggplot2)
