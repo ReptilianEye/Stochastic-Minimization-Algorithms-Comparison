@@ -4,6 +4,13 @@ author: "Piotr Rzadkowski, Jan Masternak"
 date: "20.01.2023"
 output: html_document
 ---
+# Projekt 
+
+Projekt polega na prostym opracowaniu statystycznym wyników porównania działania wybranych algorytmów minimalizacji stochastycznej. Do porównania zostałe wybrane algorytmy **Poszukiwania przypadkowego PRS** oraz **Algorytm Multi-Start MS**.
+
+Działanie algorytmów sprawdzane było na podstawie dwóch funkcji skalarnych, wielomodalnych i posiadających wersje dla różnej liczby wymiarów. Wybrane zostały funkcje **Ackley'a** (dziedzina: -32.768; 32.768; wartość minimalna: 0) oraz **Rosenbrock'a** (dziedzina: -5; 10; wartość minimalna: 0).
+
+Użyte biblioteki: smoof, ecr.
 
 ```{R}
 if (!requireNamespace("ecr", quietly = TRUE)) {
@@ -21,7 +28,6 @@ if (!requireNamespace("ggplot2", quietly = TRUE)) {
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-```{R}
 ```{R}
 library(ecr)
 library(ggplot2)
@@ -97,12 +103,41 @@ test_runner <- function(f, size, starting_points_n, range) {
 }
 ```
 
+```{R}
+check_hypothesis <- function(ms, prs) {
+    if_passed <- function(p_value) {
+        if (p_value < 0.05) {
+            return("Odrzucono hipotezę zerową, na rzecz hipotezy alternatywnej")
+        } else {
+            return("Nie odrzucono hipotezy zerowej")
+        }
+    }
+    print(paste("Wynik hipotezy dla ms (One Sample t-test):", if_passed(t.test(ms)$p.value)))
+
+    print(paste("Wynik hipotezy dla prs (One Sample t-test):", if_passed(t.test(prs)$p.value)))
+
+    print(paste("Wynik hipotezy dla ms i prs (Two Sample t-test):", if_passed(t.test(ms, prs)$p.value)))
+}
+```
+
 Test_runner zwraca następujące wartości: \* ms_min - średnia z minima znalezionych przez MS \* prs_min - średnia z minima znalezionych przez PRS \* ms_hist - histogram minima znalezionych przez MS (zapisany jako funkcja) \* prs_hist - histogram minima znalezionych przez PRS (zapisany jako funkcja) \* ms_prs_boxplot - boxplot minima znalezionych przez MS i PRS (zapisany jako funkcja)
 
 ```{R}
 n <- 100 # number of starting points
 size <- 50 # number of repetitions
 ```
+
+### Hipotezy dotyczące przedziałow ufności (One Sample t-test):
+
+-   Hipoteza zerowa - funkcja ma minimum równe 0
+
+-   Hipoteza alternatywna - funckja nie ma minimum równego 0
+
+### Hipotezy dotyczące porównywania funkcji algorytmami (Two Sample t-test):
+
+-   Hipoteza zerowa - algorytmy MS i PRS dają jednakowe wyniki
+
+-   Hipoteza alternatywna - algorytmy MS i PRS nie dają jednakowych wyników
 
 ```{R}
 f <- ackley_R2
@@ -117,14 +152,16 @@ hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Ackley w
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Ackley w 2 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
+Wykres (MS) dla Ackley R2 daje wyniki minimów leżące stosunkowo blisko zera
+(mieszczące się w przedziale [0,1]), co rzeczywiście powinno zajść. 
+
+Wykres (PRS) dla Ackley R2 daje wyniki w znacznej mierze odbiegające od zera
+(większość w przedziale [2,6]), co jest dalekie od zera.
+
+Z wykresów pudełkowych można zaobserwować, że mediana dla MS znajduje się blisko zera, czyli oczekiwanej wartości. Natomiast w przypadku PRS mediana wynosie mniej więcej 4, czyli jest daleka od zera. Zakres międzykwartylowy dla PRS jest mniejszy niż ten dla MS.   
+
 ```{R}
-# Przedziały ufności
-
-ifelse(t.test(ms)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
-
-ifelse(t.test(prs)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
-
-t.test(ms, prs, mu = 0)
+check_hypothesis(ms,prs)
 ```
 
 ```{R}
@@ -140,14 +177,14 @@ hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Ackley w
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Ackley w 10 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
+Zarówno w przypadku MS jak i PRS wykresy dały wyniki niezgodne z rzeczywistą
+postacią rzeczy (MS - większość w przedziale [17,19], PRS - więkoszość
+w przedziale [17,19])
+
+Wykresy pudełkowe są niemal identyczne - w obu przypadkach mediana znacznie odbiega od zera (wynosi mniej więcej 18). W obu przypadkach pojawiły się pojedyncze wartości bliższe oczekiwanemu zeru, jednak były w mniejszości.
+
 ```{R}
-# Przedziały ufności
-
-ifelse(t.test(ms)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
-
-ifelse(t.test(prs)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
-
-t.test(ms, prs, mu = 0)
+check_hypothesis(ms,prs)
 ```
 
 ```{R}
@@ -163,14 +200,14 @@ hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Ackley w
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Ackley w 20 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
+Zarówno w przypadku MS jak i PRS wykresy dały wyniki niezgodne z rzeczywistą
+postacią rzeczy (MS - większość w przedziale [18.6,19], PRS - więkoszość
+w przedziale [19,20])
+
+W obu przypadkach skupienie minimów jest dalekie od zera, choć dla PRS odbiega bardziej niż dla MS. Podobnie jak w przypadku powyżej wystąpiły nieliczne minima bliższe oczekiwanemu zeru (zarówno dla MS, jak i PRS).
+
 ```{R}
-# Przedziały ufności
-
-ifelse(t.test(ms)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
-
-ifelse(t.test(prs)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
-
-t.test(ms, prs, mu = 0)
+check_hypothesis(ms,prs)
 ```
 
 ```{R}
@@ -186,14 +223,12 @@ hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Rosenbro
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Rosenbrock w 2 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
+Zarówno w przypadku wykresu MS, jak i PRS otrzymane wyniki pokazują, że ustalone minima są bliskie zeru. Więkoszą skuteczność miał MS (więkoszość wartości znajduje się w zakresie [0,10^-9]), podczas gdy dla PRS jest to przedział [0,0.2].
+
+Wykres pudełkowy MS odpowiada minimom, które są niemal równe zeru. W przypadku PRS skupienie minimów jest nieco bardziej oddalone od zera, choć dalej te wartości są stosunkowo podobne do wartości oczekiwanej. W przypadku PRS wystąpiło znacznie więcej wartosci odbiegających. Przestrzeń międzykwartylowa jest zdecydowanie większa dla PRS niż dla MS. 
+
 ```{R}
-# Przedziały ufności
-
-ifelse(t.test(ms)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
-
-ifelse(t.test(prs)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
-
-t.test(ms, prs, mu = 0)
+check_hypothesis(ms,prs)
 ```
 
 ```{R}
@@ -209,14 +244,16 @@ hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Rosenbro
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Rosenbrock w 10 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
+W przypadku użycia MS otrzymane minima są bliskie 0, co widać na wykesie.
+
+W przypadku PRS wyniki nie odzwierciedlają rzeczywistej postaci rzeczy w najmniejszym stopniu - znacznie odbiegają od zera.
+
+W przypadku MS wyciągnięto wnioski podobne jak wyżej. 
+
+Tutaj wyniki otrzymane dla PRS znacznie odbiegają od oczekiwanego zera.
+
 ```{R}
-# Przedziały ufności
-
-ifelse(t.test(ms)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
-
-ifelse(t.test(prs)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
-
-t.test(ms, prs, mu = 0)
+check_hypothesis(ms,prs)
 ```
 
 ```{R}
@@ -232,12 +269,8 @@ hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Rosenbro
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Rosenbrock w 20 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
+Dla 20 wymiarów wyniki algorytmów są bardzo podobne jak w przypadku 10 wymiarów (dotyczy to też wykresów pudełkowych).
+
 ```{R}
-# Przedziały ufności
-
-ifelse(t.test(ms)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
-
-ifelse(t.test(prs)$p.value < 0.05, "Odrzucono hipotezę zerową", "Nie ma wystarczających danych do podjęcia jednoznacznej decyzji")
-
-t.test(ms, prs, mu = 0)
+check_hypothesis(ms,prs)
 ```
