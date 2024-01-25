@@ -79,7 +79,7 @@ test_runner <- function(f, size, starting_points_n, range) {
     prs_hist <- function() hist(prs, main = "Histogram of minima found by PRS", xlab = "Minima found by PRS")
     ms_prs_boxplot <- function() boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS", ylab = "Minima found by MS and PRS")
     return(c(ms = list(ms), prs = list(prs), ms_min = mean(ms), prs_min = mean(prs), ms_hist = ms_hist, prs_hist = prs_hist, ms_prs_boxplot = ms_prs_boxplot))
-    # return(c(ms_min = mean(ms), prs_min = mean(prs), ms_hist = ms_hist, prs_hist = prs_hist, ms_prs_boxplot = ms_prs_boxplot))
+    return(c(ms_min = mean(ms), prs_min = mean(prs), ms_hist = ms_hist, prs_hist = prs_hist, ms_prs_boxplot = ms_prs_boxplot))
 }
 ```
 
@@ -101,7 +101,15 @@ prs <- result$prs
 hist(ms, main = "Histogram of minima found by MS for Ackley in 2 dimensions", xlab = "Minima found by MS")
 hist(prs, main = "Histogram of minima found by PRS for Ackley in 2 dimensions", xlab = "Minima found by PRS")
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Ackley in 2 dimensions", ylab = "Minima found by MS and PRS")
+```
+```{R}
 t.test(ms, prs, mu = 0)
+
+#Przedziały ufności 
+
+ifelse(t.test(ms)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
+
+ifelse(t.test(prs)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
 ```
 
 ```{R}
@@ -115,9 +123,17 @@ prs <- result$prs
 hist(ms, main = "Histogram of minima found by MS for Ackley in 10 dimensions", xlab = "Minima found by MS")
 hist(prs, main = "Histogram of minima found by PRS for Ackley in 10 dimensions", xlab = "Minima found by PRS")
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Ackley in 10 dimensions", ylab = "Minima found by MS and PRS")
-t.test(ms, prs, mu = 0)
 ```
 
+```{R}
+t.test(ms, prs, mu = 0)
+
+#Przedziały ufności 
+
+ifelse(t.test(ms)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
+
+ifelse(t.test(prs)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
+```
 
 ```{R}
 f <- ackley_R20
@@ -134,6 +150,16 @@ t.test(ms, prs, mu = 0)
 ```
 
 ```{R}
+t.test(ms, prs, mu = 0)
+
+#Przedziały ufności 
+
+ifelse(t.test(ms)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
+
+ifelse(t.test(prs)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
+```
+
+```{R}
 f <- rosenbrock_R2
 range <- rosenbrock_range # range of starting points
 result <- test_runner(f, size, n, range)
@@ -147,6 +173,15 @@ boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS a
 t.test(ms, prs, mu = 0)
 ```
 
+```{R}
+t.test(ms, prs, mu = 0)
+
+#Przedziały ufności 
+
+ifelse(t.test(ms)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
+
+ifelse(t.test(prs)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
+```
 
 ```{R}
 f <- rosenbrock_R10
@@ -163,6 +198,16 @@ t.test(ms, prs, mu = 0)
 ```
 
 ```{R}
+t.test(ms, prs, mu = 0)
+
+#Przedziały ufności 
+
+ifelse(t.test(ms)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
+
+ifelse(t.test(prs)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
+```
+
+```{R}
 f <- rosenbrock_R20
 range <- rosenbrock_range # range of starting points
 result <- test_runner(f, size, n, range)
@@ -174,4 +219,13 @@ hist(ms, main = "Histogram of minima found by MS for Rosenbrock in 20 dimensions
 hist(prs, main = "Histogram of minima found by PRS for Rosenbrock in 20 dimensions", xlab = "Minima found by PRS")
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Boxplot of minima found by MS and PRS for Rosenbrock in 20 dimensions", ylab = "Minima found by MS and PRS")
 t.test(ms, prs, mu = 0)
+```
+
+
+```{R}
+#Przedziały ufności 
+
+ifelse(t.test(ms)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
+
+ifelse(t.test(prs)$p.value < 0.05, "Zero hipthesis has been rejected", "Not enough data to make a conclusive decision")
 ```
