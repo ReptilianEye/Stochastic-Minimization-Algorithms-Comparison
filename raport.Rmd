@@ -4,7 +4,8 @@ author: "Piotr Rzadkowski, Jan Masternak"
 date: "20.01.2023"
 output: html_document
 ---
-# Projekt 
+
+# Projekt
 
 Projekt polega na prostym opracowaniu statystycznym wyników porównania działania wybranych algorytmów minimalizacji stochastycznej. Do porównania zostałe wybrane algorytmy **Poszukiwania przypadkowego PRS** oraz **Algorytm Multi-Start MS**.
 
@@ -152,13 +153,11 @@ hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Ackley w
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Ackley w 2 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
-Wykres (MS) dla Ackley R2 daje wyniki minimów leżące stosunkowo blisko zera
-(mieszczące się w przedziale [0,1]), co rzeczywiście powinno zajść. 
+Wykres (MS) dla Ackley R2 daje wyniki minimów leżące stosunkowo blisko zera (mieszczące się w przedziale [0,1]), co rzeczywiście powinno zajść.
 
-Wykres (PRS) dla Ackley R2 daje wyniki w znacznej mierze odbiegające od zera
-(większość w przedziale [2,6]), co jest dalekie od zera.
+Wykres (PRS) dla Ackley R2 daje wyniki w znacznej mierze odbiegające od zera (większość w przedziale [2,6]), co jest dalekie od zera.
 
-Z wykresów pudełkowych można zaobserwować, że mediana dla MS znajduje się blisko zera, czyli oczekiwanej wartości. Natomiast w przypadku PRS mediana wynosie mniej więcej 4, czyli jest daleka od zera. Zakres międzykwartylowy dla PRS jest mniejszy niż ten dla MS.   
+Z wykresów pudełkowych można zaobserwować, że mediana dla MS znajduje się blisko zera, czyli oczekiwanej wartości. Natomiast w przypadku PRS mediana wynosie mniej więcej 4, czyli jest daleka od zera. Zakres międzykwartylowy dla PRS jest mniejszy niż ten dla MS.
 
 ```{R}
 check_hypothesis(ms,prs)
@@ -177,9 +176,7 @@ hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Ackley w
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Ackley w 10 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
-Zarówno w przypadku MS jak i PRS wykresy dały wyniki niezgodne z rzeczywistą
-postacią rzeczy (MS - większość w przedziale [17,19], PRS - więkoszość
-w przedziale [17,19])
+Zarówno w przypadku MS jak i PRS wykresy dały wyniki niezgodne z rzeczywistą postacią rzeczy (MS - większość w przedziale [17,19], PRS - więkoszość w przedziale [17,19])
 
 Wykresy pudełkowe są niemal identyczne - w obu przypadkach mediana znacznie odbiega od zera (wynosi mniej więcej 18). W obu przypadkach pojawiły się pojedyncze wartości bliższe oczekiwanemu zeru, jednak były w mniejszości.
 
@@ -200,9 +197,7 @@ hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Ackley w
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Ackley w 20 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
-Zarówno w przypadku MS jak i PRS wykresy dały wyniki niezgodne z rzeczywistą
-postacią rzeczy (MS - większość w przedziale [18.6,19], PRS - więkoszość
-w przedziale [19,20])
+Zarówno w przypadku MS jak i PRS wykresy dały wyniki niezgodne z rzeczywistą postacią rzeczy (MS - większość w przedziale [18.6,19], PRS - więkoszość w przedziale [19,20])
 
 W obu przypadkach skupienie minimów jest dalekie od zera, choć dla PRS odbiega bardziej niż dla MS. Podobnie jak w przypadku powyżej wystąpiły nieliczne minima bliższe oczekiwanemu zeru (zarówno dla MS, jak i PRS).
 
@@ -223,9 +218,9 @@ hist(prs, main = "Histogram minimów znalezionych przez PRS dla funkcji Rosenbro
 boxplot(ms, prs, names = c("MS", "PRS"), main = "Wykres pudełkowy minimów znalezionych przez MS i PRS dla funkcji Rosenbrock w 2 wymiarach", ylab = "Minima znalezione przez MS i PRS")
 ```
 
-Zarówno w przypadku wykresu MS, jak i PRS otrzymane wyniki pokazują, że ustalone minima są bliskie zeru. Więkoszą skuteczność miał MS (więkoszość wartości znajduje się w zakresie [0,10^-9]), podczas gdy dla PRS jest to przedział [0,0.2].
+Zarówno w przypadku wykresu MS, jak i PRS otrzymane wyniki pokazują, że ustalone minima są bliskie zeru. Więkoszą skuteczność miał MS (więkoszość wartości znajduje się w zakresie [0,10\^-9]), podczas gdy dla PRS jest to przedział [0,0.2].
 
-Wykres pudełkowy MS odpowiada minimom, które są niemal równe zeru. W przypadku PRS skupienie minimów jest nieco bardziej oddalone od zera, choć dalej te wartości są stosunkowo podobne do wartości oczekiwanej. W przypadku PRS wystąpiło znacznie więcej wartosci odbiegających. Przestrzeń międzykwartylowa jest zdecydowanie większa dla PRS niż dla MS. 
+Wykres pudełkowy MS odpowiada minimom, które są niemal równe zeru. W przypadku PRS skupienie minimów jest nieco bardziej oddalone od zera, choć dalej te wartości są stosunkowo podobne do wartości oczekiwanej. W przypadku PRS wystąpiło znacznie więcej wartosci odbiegających. Przestrzeń międzykwartylowa jest zdecydowanie większa dla PRS niż dla MS.
 
 ```{R}
 check_hypothesis(ms,prs)
@@ -248,7 +243,7 @@ W przypadku użycia MS otrzymane minima są bliskie 0, co widać na wykesie.
 
 W przypadku PRS wyniki nie odzwierciedlają rzeczywistej postaci rzeczy w najmniejszym stopniu - znacznie odbiegają od zera.
 
-W przypadku MS wyciągnięto wnioski podobne jak wyżej. 
+W przypadku MS wyciągnięto wnioski podobne jak wyżej.
 
 Tutaj wyniki otrzymane dla PRS znacznie odbiegają od oczekiwanego zera.
 
@@ -274,3 +269,7 @@ Dla 20 wymiarów wyniki algorytmów są bardzo podobne jak w przypadku 10 wymiar
 ```{R}
 check_hypothesis(ms,prs)
 ```
+
+## Podsumowanie 
+
+Na podstawie testów przeprowadzonych dla algorytmów znajdywania minimum Pure Random Search oraz Multi Start dla funkcji Ackely i Rosenbrock można stwierdzić, że w każdym przypadku lepiej działa algorytm Multi Start, co jest wynikiem spodziewanym. W przypadku Ackley'a dla wymiarów wyższych niż dwa, obydwa algorytmy nie działały dobrze. Warto też zauważyć, że w przypadku Rosenbrocka (10 oraz 20 wymarów) użycie Muti Startu daje wyniki bardzo bliskie oczekiwanej wartości (zero), podczas gdy użycie Pure Random Search poskutkowało uzyskaniem wyników znacząco odbiegających od oczekiwanych.
