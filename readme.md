@@ -10,8 +10,8 @@ The results of the analysis are presented in the raport.html file, which is gene
 
 ## Authors
 
-Piotr Rzadkowski
-Jan Masternak
+- Piotr Rzadkowski
+- Jan Masternak
 
 ## License
 
